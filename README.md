@@ -1,9 +1,9 @@
-# st - Simple Test for NodeJS
+# ttf - Tiny Test Framework (for NodeJS)
 
 ## Getting start
 
 ```
-$ npm install git+https://github.com/glejeune/st.git --save-dev
+$ npm install git+https://github.com/glejeune/ttf.git --save-dev
 $ mkdir test
 $ $EDITOR test/test_suite.js
 ```
@@ -44,13 +44,13 @@ suite('Simple suite one', () => {
 Then, to run the all test suites :
 
 ```
-$ npx st test
+$ npx ttf test
 ```
 
 To run on specific test suite :
 
 ```
-$ npx st test/test_suite.js
+$ npx ttf test/test_suite.js
 ```
 
 or 
