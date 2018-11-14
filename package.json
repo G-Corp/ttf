@@ -1,0 +1,28 @@
+{
+  "name": "ttf",
+  "version": "0.0.1",
+  "description": "Tiny Test Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "node bin/ttf test"
+  },
+  "author": "Gregoire Lejeune <gregoire.lejeune@free.fr>",
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/G-Corp/ttf.git"
+  },
+  "bugs": {
+    "url": "https://github.com/G-Corp/ttf/issues/"
+  },
+  "homepage": "https://github.com/G-Corp/ttf",
+  "bin": {
+    "ttf": "./bin/ttf"
+  },
+  "directories": {
+    "test": "./test"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
+  }
+}

@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const { spawn } = require('child_process');
+const state = require('../state').instance;
+
+const walkSync = (dir) => {
+  let filelist = [];
+  fs.readdirSync(dir).forEach(file => {
+    filelist = fs.statSync(path.join(dir, file)).isDirectory()
+      ? walkSync(path.join(dir, file), filelist)
+      : filelist.concat(/^test.*\.js/.test(file) ? path.join(dir, file) : []);
+  });
+  return filelist;
+}
+
+const args = process.argv.slice(2).reduce((acc, path) => {
+  let fileStat = fs.statSync(path);
+  if (fileStat.isDirectory()) {
+    acc = acc.concat(walkSync(path));
+  } else if (fileStat.isFile()) {
+    acc.push(path);
+  }
+
+  return acc;
+}, []);
+
+args.forEach((suite) => {
+  require(path.join(process.cwd(), suite));
+});
