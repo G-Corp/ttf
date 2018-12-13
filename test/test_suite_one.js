@@ -1,4 +1,4 @@
-const { suite, test, assertTrue, assertFalse } = require('../index.js');
+const {suite, test, assertTrue, assertFalse} = require('../index.js');
 
 suite('Simple suite one', () => {
   test('true is true', () => {

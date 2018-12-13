@@ -1,36 +1,36 @@
 const assert = require('assert');
 const state = require('./state').instance;
 
-process.on('beforeExit', () => { 
-  state.terminate(); 
+process.on('beforeExit', () => {
+  state.terminate();
 });
 
 module.exports = {
-  assertTrue: (condition) => {
+  assertTrue: condition => {
     state.addAssert();
-    assert((condition) === true)
+    assert(condition === true);
   },
-  assertFalse: (condition) => {
+  assertFalse: condition => {
     state.addAssert();
-    assert((condition) === false)
+    assert(condition === false);
   },
   assertEqual: (actual, expected) => {
     state.addAssert();
-    assert.equal(actual, expected)
+    assert.equal(actual, expected);
   },
   assertNotEqual: (actual, expected) => {
     state.addAssert();
-    assert.notEqual(actual, expected)
+    assert.notEqual(actual, expected);
   },
   assertThrows: (callback, error, message) => {
     state.addAssert();
     assert.throws(callback, error, message);
   },
 
-  beforeEach: (callback) => state.addBeforeEach(callback),
-  afterEach: (callback) => state.addAfterEach(callback),
-  beforeAll: (callback) => state.addBeforeAll(callback),
-  afterAll: (callback) => state.addAfterAll(callback),
+  beforeEach: callback => state.addBeforeEach(callback),
+  afterEach: callback => state.addAfterEach(callback),
+  beforeAll: callback => state.addBeforeAll(callback),
+  afterAll: callback => state.addAfterAll(callback),
 
   suite: (description, callback) => state.runSuite(description, callback),
 

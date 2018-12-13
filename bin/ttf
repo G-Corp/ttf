@@ -4,10 +4,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const {spawn} = require('child_process');
 const state = require('../state').instance;
 
-const walkSync = (dir) => {
+const walkSync = dir => {
   let filelist = [];
   fs.readdirSync(dir).forEach(file => {
     filelist = fs.statSync(path.join(dir, file)).isDirectory()
@@ -15,7 +15,7 @@ const walkSync = (dir) => {
       : filelist.concat(/^test.*\.js/.test(file) ? path.join(dir, file) : []);
   });
   return filelist;
-}
+};
 
 const args = process.argv.slice(2).reduce((acc, path) => {
   let fileStat = fs.statSync(path);
@@ -28,6 +28,6 @@ const args = process.argv.slice(2).reduce((acc, path) => {
   return acc;
 }, []);
 
-args.forEach((suite) => {
+args.forEach(suite => {
   require(path.join(process.cwd(), suite));
 });

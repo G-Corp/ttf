@@ -1,4 +1,4 @@
-const { suite, test, assertThrows } = require('../../index.js');
+const {suite, test, assertThrows} = require('../../index.js');
 
 suite('Tests in sub dir', () => {
   test('true is true', () => {
@@ -7,7 +7,7 @@ suite('Tests in sub dir', () => {
         call_undefined_function();
       },
       ReferenceError,
-      'call_undefined_function is not defined'
+      'call_undefined_function is not defined',
     );
   });
 });

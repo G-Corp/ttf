@@ -1,9 +1,9 @@
 # ttf - Tiny Test Framework (for NodeJS)
 
-## Getting start
+## Getting start
 
 ```
-$ npm install git+https://github.com/glejeune/ttf.git --save-dev
+$ npm install git+https://github.com/g-corp/ttf.git --save-dev
 $ mkdir test
 $ $EDITOR test/test_suite.js
 ```

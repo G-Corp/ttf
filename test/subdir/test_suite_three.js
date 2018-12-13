@@ -1,4 +1,4 @@
-const { suite, test, assertTrue, assertFalse } = require('../../index.js');
+const {suite, test, assertTrue, assertFalse} = require('../../index.js');
 
 suite('Tests in sub dir', () => {
   test('true is true', () => {
