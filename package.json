@@ -4,7 +4,8 @@
   "description": "Tiny Test Framework",
   "main": "index.js",
   "scripts": {
-    "test": "node bin/ttf test"
+    "test": "node bin/ttf test",
+    "doc": "npx jsdoc2md -t README.hbs index.js > README.md"
   },
   "author": "Gregoire Lejeune <gregoire.lejeune@free.fr>",
   "license": "BSD-2-Clause",
@@ -24,5 +25,8 @@
   },
   "engines": {
     "node": ">= 8.0.0"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^4.0.1"
   }
 }

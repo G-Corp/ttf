@@ -4,8 +4,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const {spawn} = require('child_process');
-const state = require('../state').instance;
 
 const walkSync = dir => {
   let filelist = [];
