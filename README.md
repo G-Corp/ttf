@@ -1,5 +1,10 @@
 # ttf - Tiny Test Framework (for NodeJS)
 
+[![Build Status](https://img.shields.io/travis/G-Corp/ttf.svg?style=flat-square)](https://travis-ci.org/G-Corp/ttf)
+[![Version](https://img.shields.io/npm/v/ttf.svg?style=flat-square)](https://www.npmjs.com/package/ttf)
+[![License](https://img.shields.io/github/license/G-Corp/ttf.svg?style=flat-square)](https://github.com/G-Corp/ttf/blob/master/LICENSE)
+[![Issues](https://img.shields.io/github/issues/G-Corp/ttf.svg?style=flat-square)](https://github.com/G-Corp/ttf/issues)
+
 ## Getting start
 
 ```
