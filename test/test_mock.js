@@ -7,26 +7,55 @@ const {
   beforeEach,
   afterEach,
 } = require('../index.js');
-const fs = require('fs');
+
+const testMod = {
+  foo(x, y) {
+    return this.bar(x, y);
+  },
+
+  bar(x, y) {
+    return x + y;
+  }
+};
 
 suite('mock a nodejs module', () => {
   beforeEach(() => {
-    mock.new(fs);
+    mock.new(testMod);
   });
 
   afterEach(() => {
-    mock.unload(fs);
+    mock.unload(testMod);
   });
 
-  test('mock fs.stats', () => {
-    mock.expect(fs, 'statSync', file => {
-      return {mock: 'ok', file};
+  test('mock testMod.bar with a function', () => {
+    mock.expect(testMod, 'bar', (x, y) => {
+      return x * y;
     });
 
-    const r = fs.statSync(__filename);
+    const r = testMod.foo(3, 4);
 
-    assertEqual(r, {mock: 'ok', file: __filename});
-    assertCall(fs, 'statSync', 1);
-    assertCall(fs, 'statSync', [__filename]);
+    assertEqual(r, 12),
+    assertCall(testMod, 'bar', 1);
+    assertCall(testMod, 'bar', [3, 4]);
+  });
+
+  test('mock testMod.bar with a value', () => {
+    mock.expect(testMod, 'bar', 42);
+
+    const r = testMod.foo(3, 4);
+
+    assertEqual(r, 42),
+    assertCall(testMod, 'bar', 1);
+    assertCall(testMod, 'bar', [3, 4]);
+  });
+
+  test('mock testMod.bar and allow passthrough', () => {
+    mock.expect(testMod, 'bar', mock.passthrough);
+
+    const r = testMod.foo(3, 4);
+
+    assertEqual(r, 7),
+    assertCall(testMod, 'bar', 1);
+    assertCall(testMod, 'bar', [3, 4]);
   });
 });

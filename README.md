@@ -8,7 +8,18 @@
 ## Getting start
 
 ```
+$ npm install ttf
+```
+
+or
+
+```
 $ npm install git+https://github.com/g-corp/ttf.git --save-dev
+```
+
+then 
+
+```
 $ mkdir test
 $ $EDITOR test/test_suite.js
 ```
@@ -82,7 +93,7 @@ suite('Simple suite one', () => {
 });
 ```
 
-Then, to run the all test suites :
+Then, to run all test suites :
 
 ```
 $ npx ttf test
@@ -99,13 +110,16 @@ or
 ```
 $ node test/test_suite.js
 ```
+
 ## API Reference
+
 
 * [ttf](#module_ttf)
     * [.mock](#module_ttf.mock) : <code>object</code>
+        * [.passthrough](#module_ttf.mock.passthrough)
         * [.new(module)](#module_ttf.mock.new)
         * [.unload(module)](#module_ttf.mock.unload)
-        * [.expect(module, fname, fn)](#module_ttf.mock.expect)
+        * [.expect(module, fname, [fn])](#module_ttf.mock.expect)
     * [.suite(description, fn)](#module_ttf.suite)
     * [.test(description, fn)](#module_ttf.test)
     * [.beforeEach(fn)](#module_ttf.beforeEach)
@@ -127,10 +141,17 @@ mock
 **Kind**: static namespace of [<code>ttf</code>](#module_ttf)  
 
 * [.mock](#module_ttf.mock) : <code>object</code>
+    * [.passthrough](#module_ttf.mock.passthrough)
     * [.new(module)](#module_ttf.mock.new)
     * [.unload(module)](#module_ttf.mock.unload)
-    * [.expect(module, fname, fn)](#module_ttf.mock.expect)
+    * [.expect(module, fname, [fn])](#module_ttf.mock.expect)
 
+<a name="module_ttf.mock.passthrough"></a>
+
+#### mock.passthrough
+Passthrough value for moxk.
+
+**Kind**: static property of [<code>mock</code>](#module_ttf.mock)  
 <a name="module_ttf.mock.new"></a>
 
 #### mock.new(module)
@@ -225,8 +246,8 @@ suite('mock a nodejs module', () => {
 ```
 <a name="module_ttf.mock.expect"></a>
 
-#### mock.expect(module, fname, fn)
-Mock the function fname in module with fn.
+#### mock.expect(module, fname, [fn])
+Mock the function fname in module.
 
 **Kind**: static method of [<code>mock</code>](#module_ttf.mock)  
 
@@ -234,7 +255,7 @@ Mock the function fname in module with fn.
 | --- | --- | --- |
 | module | <code>module</code> | Module to mock. |
 | fname | <code>string</code> | Name of the function to mock in the module. |
-| fn | <code>function</code> | Mock function. |
+| [fn] | <code>function</code> \| <code>mock.passthrough</code> \| <code>any</code> | Mock result. |
 
 **Example**  
 ```js

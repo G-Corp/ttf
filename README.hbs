@@ -8,7 +8,18 @@
 ## Getting start
 
 ```
+$ npm install ttf
+```
+
+or
+
+```
 $ npm install git+https://github.com/g-corp/ttf.git --save-dev
+```
+
+then 
+
+```
 $ mkdir test
 $ $EDITOR test/test_suite.js
 ```
@@ -82,7 +93,7 @@ suite('Simple suite one', () => {
 });
 ```
 
-Then, to run the all test suites :
+Then, to run all test suites :
 
 ```
 $ npx ttf test
@@ -99,7 +110,9 @@ or
 ```
 $ node test/test_suite.js
 ```
+
 ## API Reference
+
 {{#module name="ttf"}}
 {{>body~}}
 {{>member-index~}}

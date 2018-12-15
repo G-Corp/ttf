@@ -394,11 +394,12 @@ module.exports = {
     unload: module => _mock.unload(module),
 
     /**
-     * Mock the function fname in module with fn.
+     * Mock the function fname in module.
      *
      * @param {module} module - Module to mock.
      * @param {string} fname - Name of the function to mock in the module.
-     * @param {function} fn - Mock function.
+     * @param {function | mock.passthrough | any} [fn] - Mock result.
+     *
      * @example
      * ```js
      * const {
@@ -437,5 +438,10 @@ module.exports = {
      *
      */
     expect: (module, fname, fn) => _mock.expect(module, fname, fn),
+
+    /**
+     * Passthrough value for moxk.
+     */
+    passthrough: _mock.passthrough
   },
 };

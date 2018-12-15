@@ -23,6 +23,7 @@ let globalSymbols = Object.getOwnPropertySymbols(global);
 let hasSTMock = globalSymbols.indexOf(ST_MOCK) > -1;
 if (!hasSTMock) {
   global[ST_MOCK] = {
+    passthrough: `___${createUID(62)}.ST.Test.Mock.Passthrough`,
     mocks: {},
 
     new: module => {
@@ -58,7 +59,18 @@ if (!hasSTMock) {
               []),
             args,
           ];
-          return fun(...args);
+
+          if (typeof fun === 'function') {
+            return fun(...args);
+          }
+
+          if (fun === global[ST_MOCK].passthrough) {
+            return (global[ST_MOCK].mocks[module.__stTestMockUID].originals[funName])(...args);
+          }
+
+          if (fun) {
+            return fun;
+          }
         };
       } else {
         throw new Error('module not mocked');
