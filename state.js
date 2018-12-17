@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { performance } = require('perf_hooks');
+const {performance} = require('perf_hooks');
 
 const RESET = '\x1b[0m';
 const RED = '\x1b[31m';
@@ -9,11 +9,12 @@ const YELLOW = '\x1b[33m';
 const NOTHING_FUNCTION = () => {};
 
 const ST_SUITE = Symbol.for('ST.Test.Suite');
-var globalSymbols = Object.getOwnPropertySymbols(global);
-var hasSTSuite = globalSymbols.indexOf(ST_SUITE) > -1;
+const globalSymbols = Object.getOwnPropertySymbols(global);
+const hasSTSuite = globalSymbols.indexOf(ST_SUITE) > -1;
 if (!hasSTSuite) {
   global[ST_SUITE] = {
     totalDuration: 0,
+    totalSkipped: 0,
     testsCount: 0,
     assertsCount: 0,
     errors: [],
@@ -29,8 +30,9 @@ if (!hasSTSuite) {
       global[ST_SUITE].assertsCount++;
     },
 
-    addTest: (description, callback) => {
+    addTest: (description, callback, options) => {
       global[ST_SUITE].tests.push({
+        ...options,
         description,
         callback,
       });
@@ -49,58 +51,71 @@ if (!hasSTSuite) {
       global[ST_SUITE].afterEach = callback;
     },
 
-    runSuite: (description, callback) => {
-      global[ST_SUITE].suite = description;
+    runSuite: (description, callback, options) => {
+      const self = global[ST_SUITE];
+      self.suite = description;
       callback();
-      if (global[ST_SUITE].tests.length > 0) {
-        global[ST_SUITE].beforeAll();
-        global[ST_SUITE].tests.forEach(test => {
-          global[ST_SUITE].beforeEach();
-          try {
-            const startDate = performance.now();
-            test.callback();
-            const endDate = performance.now();
-            global[ST_SUITE].testsCount++;
-            global[ST_SUITE].totalDuration += (endDate - startDate);
-            process.stdout.write(`${GREEN}.${RESET}`);
-          } catch (error) {
-            process.stdout.write(`${RED}F${RESET}`);
-            if (error instanceof assert.AssertionError) {
-              global[ST_SUITE].errors.push({
-                suite: global[ST_SUITE].suite,
-                test: test.description,
-                expected: error.expected,
-                actual: error.actual,
-                stacktrace: error.stack,
-              });
-            } else {
-              global[ST_SUITE].errors.push({
-                suite: global[ST_SUITE].suite,
-                test: test.description,
-                stacktrace: error.stack,
-              });
+      if (self.tests.length > 0) {
+        if (!options || !options.skip) {
+          self.beforeAll();
+        }
+        self.tests.forEach(test => {
+          if ((!options || !options.skip) && !test.skip) {
+            self.beforeEach();
+            try {
+              const startDate = performance.now();
+              test.callback();
+              const endDate = performance.now();
+              self.testsCount++;
+              self.totalDuration += endDate - startDate;
+              process.stdout.write(`${GREEN}.${RESET}`);
+            } catch (error) {
+              process.stdout.write(`${RED}F${RESET}`);
+              if (error instanceof assert.AssertionError) {
+                self.errors.push({
+                  suite: self.suite,
+                  test: test.description,
+                  expected: error.expected,
+                  actual: error.actual,
+                  stacktrace: error.stack,
+                });
+              } else {
+                self.errors.push({
+                  suite: self.suite,
+                  test: test.description,
+                  stacktrace: error.stack,
+                });
+              }
             }
+            self.afterEach();
+          } else {
+            self.totalSkipped++;
           }
-          global[ST_SUITE].afterEach();
         });
-        global[ST_SUITE].afterAll();
+        if (!options || !options.skip) {
+          self.afterAll();
+        }
       }
-      global[ST_SUITE].suite = '';
-      global[ST_SUITE].tests = [];
-      global[ST_SUITE].beforeEach = NOTHING_FUNCTION;
-      global[ST_SUITE].afterEach = NOTHING_FUNCTION;
-      global[ST_SUITE].beforeAll = NOTHING_FUNCTION;
-      global[ST_SUITE].afterAll = NOTHING_FUNCTION;
+      self.suite = '';
+      self.tests = [];
+      self.beforeEach = NOTHING_FUNCTION;
+      self.afterEach = NOTHING_FUNCTION;
+      self.beforeAll = NOTHING_FUNCTION;
+      self.afterAll = NOTHING_FUNCTION;
     },
 
     terminate: () => {
-      self = global[ST_SUITE];
+      const self = global[ST_SUITE];
       process.stdout.write('\n\n');
       process.stdout.write(
         `${GREEN}${self.testsCount} passed (${
           self.assertsCount
         } assertions)${RESET}`,
       );
+      if (self.totalSkipped) {
+        process.stdout.write(' - ');
+        process.stdout.write(`${YELLOW}${self.totalSkipped} skipped${RESET}`);
+      }
       process.exitCode = self.errors.length;
       if (self.errors.length > 0) {
         process.stdout.write(' - ');

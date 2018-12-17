@@ -15,6 +15,7 @@ module.exports = {
    *
    * @param {string} description - Suite description.
    * @param {function} fn - Function to run.
+   * @param {object} options - Suite options
    * @example
    * ```js
    * const { suite, test, assertTrue } = require('ttf');
@@ -26,13 +27,25 @@ module.exports = {
    * });
    * ```
    */
-  suite: (description, fn) => _state.runSuite(description, fn),
+  suite: (description, fn, options) =>
+    _state.runSuite(description, fn, options),
+
+  /**
+   * Same as `suite(description, fn, {...options, skip: true})`
+   *
+   * @param {string} description - Suite description.
+   * @param {function} fn - Function to run.
+   * @param {object} options - Suite options
+   */
+  xsuite: (description, fn, options) =>
+    _state.runSuite(description, fn, {...options, skip: true}),
 
   /**
    * Create a new test.
    *
    * @param {string} description - Test description.
    * @param {function} fn - Function to run.
+   * @param {object} options - Test options
    * @example
    * ```js
    * const { suite, test, assertTrue } = require('ttf');
@@ -44,7 +57,17 @@ module.exports = {
    * });
    * ```
    */
-  test: (description, fn) => _state.addTest(description, fn),
+  test: (description, fn, options) => _state.addTest(description, fn, options),
+
+  /**
+   * Same as `test(description, fn, {...options, skip: true})`
+   *
+   * @param {string} description - Test description.
+   * @param {function} fn - Function to run.
+   * @param {object} options - Test options
+   */
+  xtest: (description, fn, options) =>
+    _state.addTest(description, fn, {...options, skip: true}),
 
   /**
    * Declare fn to run before each tests in the block.
@@ -442,6 +465,6 @@ module.exports = {
     /**
      * Passthrough value for moxk.
      */
-    passthrough: _mock.passthrough
+    passthrough: _mock.passthrough,
   },
 };

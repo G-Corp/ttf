@@ -120,8 +120,10 @@ $ node test/test_suite.js
         * [.new(module)](#module_ttf.mock.new)
         * [.unload(module)](#module_ttf.mock.unload)
         * [.expect(module, fname, [fn])](#module_ttf.mock.expect)
-    * [.suite(description, fn)](#module_ttf.suite)
-    * [.test(description, fn)](#module_ttf.test)
+    * [.suite(description, fn, options)](#module_ttf.suite)
+    * [.xsuite(description, fn, options)](#module_ttf.xsuite)
+    * [.test(description, fn, options)](#module_ttf.test)
+    * [.xtest(description, fn, options)](#module_ttf.xtest)
     * [.beforeEach(fn)](#module_ttf.beforeEach)
     * [.afterEach(fn)](#module_ttf.afterEach)
     * [.beforeAll(fn)](#module_ttf.beforeAll)
@@ -294,7 +296,7 @@ suite('mock a nodejs module', () => {
 ```
 <a name="module_ttf.suite"></a>
 
-### ttf.suite(description, fn)
+### ttf.suite(description, fn, options)
 Create a new test suite.
 
 **Kind**: static method of [<code>ttf</code>](#module_ttf)  
@@ -303,6 +305,7 @@ Create a new test suite.
 | --- | --- | --- |
 | description | <code>string</code> | Suite description. |
 | fn | <code>function</code> | Function to run. |
+| options | <code>object</code> | Suite options |
 
 **Example**  
 ```js
@@ -314,9 +317,22 @@ suite('Simple suite', () => {
   });
 });
 ```
+<a name="module_ttf.xsuite"></a>
+
+### ttf.xsuite(description, fn, options)
+Same as `suite(description, fn, {...options, skip: true})`
+
+**Kind**: static method of [<code>ttf</code>](#module_ttf)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| description | <code>string</code> | Suite description. |
+| fn | <code>function</code> | Function to run. |
+| options | <code>object</code> | Suite options |
+
 <a name="module_ttf.test"></a>
 
-### ttf.test(description, fn)
+### ttf.test(description, fn, options)
 Create a new test.
 
 **Kind**: static method of [<code>ttf</code>](#module_ttf)  
@@ -325,6 +341,7 @@ Create a new test.
 | --- | --- | --- |
 | description | <code>string</code> | Test description. |
 | fn | <code>function</code> | Function to run. |
+| options | <code>object</code> | Test options |
 
 **Example**  
 ```js
@@ -336,6 +353,19 @@ suite('Simple suite', () => {
   });
 });
 ```
+<a name="module_ttf.xtest"></a>
+
+### ttf.xtest(description, fn, options)
+Same as `test(description, fn, {...options, skip: true})`
+
+**Kind**: static method of [<code>ttf</code>](#module_ttf)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| description | <code>string</code> | Test description. |
+| fn | <code>function</code> | Function to run. |
+| options | <code>object</code> | Test options |
+
 <a name="module_ttf.beforeEach"></a>
 
 ### ttf.beforeEach(fn)
