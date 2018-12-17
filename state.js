@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { performance } = require('perf_hooks');
 
 const RESET = '\x1b[0m';
 const RED = '\x1b[31m';
@@ -12,6 +13,7 @@ var globalSymbols = Object.getOwnPropertySymbols(global);
 var hasSTSuite = globalSymbols.indexOf(ST_SUITE) > -1;
 if (!hasSTSuite) {
   global[ST_SUITE] = {
+    totalDuration: 0,
     testsCount: 0,
     assertsCount: 0,
     errors: [],
@@ -55,8 +57,11 @@ if (!hasSTSuite) {
         global[ST_SUITE].tests.forEach(test => {
           global[ST_SUITE].beforeEach();
           try {
+            const startDate = performance.now();
             test.callback();
+            const endDate = performance.now();
             global[ST_SUITE].testsCount++;
+            global[ST_SUITE].totalDuration += (endDate - startDate);
             process.stdout.write(`${GREEN}.${RESET}`);
           } catch (error) {
             process.stdout.write(`${RED}F${RESET}`);
@@ -100,6 +105,7 @@ if (!hasSTSuite) {
       if (self.errors.length > 0) {
         process.stdout.write(' - ');
         process.stdout.write(`${RED}${self.errors.length} failed${RESET}`);
+        process.stdout.write(` (${self.totalDuration.toFixed(2)} ms)`);
         process.stdout.write('\n');
         self.errors.forEach(error => {
           process.stdout.write('\n');
@@ -118,6 +124,7 @@ if (!hasSTSuite) {
           });
         });
       } else {
+        process.stdout.write(` (${self.totalDuration.toFixed(2)} ms)`);
         process.stdout.write('\n');
       }
     },
