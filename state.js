@@ -7,6 +7,7 @@ const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
 
 const NOTHING_FUNCTION = () => {};
+const DEFAULT_TIMEOUT = 3000;
 
 const ST_SUITE = Symbol.for('ST.Test.Suite');
 const globalSymbols = Object.getOwnPropertySymbols(global);
@@ -61,34 +62,69 @@ if (!hasSTSuite) {
         }
         self.tests.forEach(test => {
           if ((!options || !options.skip) && !test.skip) {
+            let timeoutID;
+            let runID;
+
+            const timeout =
+              test.timeout || (options && options.timeout) || DEFAULT_TIMEOUT;
+
             self.beforeEach();
-            try {
-              const startDate = performance.now();
-              test.callback();
-              const endDate = performance.now();
-              self.testsCount++;
-              self.totalDuration += endDate - startDate;
-              process.stdout.write(`${GREEN}.${RESET}`);
-            } catch (error) {
-              process.stdout.write(`${RED}F${RESET}`);
-              if (error instanceof assert.AssertionError) {
-                self.errors.push({
-                  suite: self.suite,
-                  test: test.description,
-                  expected: error.expected,
-                  actual: error.actual,
-                  stacktrace: error.stack,
-                });
-              } else {
-                self.errors.push({
-                  suite: self.suite,
-                  test: test.description,
-                  stacktrace: error.stack,
-                });
-              }
-            }
+
+            const timeoutPromise = new Promise((resolve, reject) => {
+              console.log('START TIEMOUT', timeout);
+              timeoutID = setTimeout(() => {
+                console.log(test.description, ': SEND ERROR');
+                reject(new Error('timeout'));
+                clearTimeout(timeoutID);
+                clearTimeout(runID);
+              }, timeout);
+            });
+
+            const execPromise = new Promise((resolve, reject) => {
+              runID = setTimeout(() => {
+                const startDate = performance.now();
+                try {
+                  test.callback();
+                  const endDate = performance.now();
+                  console.log(test.description, ': SEND ', endDate - startDate);
+                  resolve(endDate - startDate);
+                } catch (error) {
+                  reject(error);
+                }
+                clearTimeout(timeoutID);
+                clearTimeout(runID);
+              }, 0);
+            });
+
+            const runner = Promise.race([execPromise, timeoutPromise]);
+            runner
+              .then(response => {
+                self.testsCount++;
+                self.totalDuration += response;
+                process.stdout.write(`${GREEN}.${RESET}`);
+              })
+              .catch(error => {
+                process.stdout.write(`${RED}F${RESET}`);
+                if (error instanceof assert.AssertionError) {
+                  self.errors.push({
+                    suite: self.suite,
+                    test: test.description,
+                    expected: error.expected,
+                    actual: error.actual,
+                    stacktrace: error.stack,
+                  });
+                } else {
+                  self.errors.push({
+                    suite: self.suite,
+                    test: test.description,
+                    stacktrace: error.stack,
+                  });
+                }
+              });
+
             self.afterEach();
           } else {
+            process.stdout.write(`${YELLOW}S${RESET}`);
             self.totalSkipped++;
           }
         });
