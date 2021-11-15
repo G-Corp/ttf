@@ -27,6 +27,6 @@
     "node": ">= 8.5.0"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^4.0.1"
+    "jsdoc-to-markdown": "^7.1.0"
   }
 }
